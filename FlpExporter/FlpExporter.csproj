@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Flp\" />
-    <Folder Include="Youtube\" />
+    <Compile Remove="Flp\**" />
+    <Compile Remove="Youtube\**" />
+    <EmbeddedResource Remove="Flp\**" />
+    <EmbeddedResource Remove="Youtube\**" />
+    <None Remove="Flp\**" />
+    <None Remove="Youtube\**" />
   </ItemGroup>
 
 </Project>
