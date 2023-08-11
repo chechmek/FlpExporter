@@ -1,6 +1,6 @@
 ﻿namespace FlpExporter.WavToMp4
 {
-    public class Mp4ExporterOptions
+    public class Mp4ExportOptions
     {
     }
 }
