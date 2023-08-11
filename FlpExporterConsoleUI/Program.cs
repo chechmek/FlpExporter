@@ -9,7 +9,7 @@ var console = new ConsoleUI();
 
 FlpExportOptions flpExportOptions = new()
 {
-    fl64Location = @"""C:\Program Files\Image-Line\FL Studio 20\FL64.exe""",
+    fl64Location = @"C:\Program Files\Image-Line\FL Studio 20\FL64.exe",
     outputFolder = Locations.AudioFolder,
     RenderMp3 = true
 };

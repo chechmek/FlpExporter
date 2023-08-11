@@ -54,7 +54,7 @@ namespace FlpExporter.FlpExport
 
         private void ExportFlp(string flpLocation)
         {
-            string exportAudioCommand = @$"{fl64Location} /E{formats} /R /O{destinationFolder} {flpLocation}";
+            string exportAudioCommand = @$"{Wrap(fl64Location)} /E{formats} /R /O{Wrap(destinationFolder)} {Wrap(flpLocation)}";
 
             Process cmd = new Process();
             cmd.StartInfo.FileName = "cmd.exe";
@@ -84,6 +84,11 @@ namespace FlpExporter.FlpExport
             //var directory = Path.Combine(Directory.GetCurrentDirectory(), path);
             var files = Directory.GetFiles(path, "*.flp", SearchOption.TopDirectoryOnly);
             return files;
+        }
+
+        private string Wrap(string str)
+        {
+            return @"""" + str + @"""";
         }
     }
 }
