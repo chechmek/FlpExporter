@@ -1,4 +1,4 @@
-﻿namespace FlpExporter.Stages.Models
+﻿namespace FlpExporter.FlpRender
 {
     public class FlpRenderOptions
     {
