@@ -1,6 +1,7 @@
 ﻿using FFMpegCore;
 using FlpExporter.Abstract;
 using FlpExporter.Logging;
+using FlpExporter.Thumbnail;
 using System.Diagnostics;
 
 namespace FlpExporter.WavToMp4
@@ -12,24 +13,24 @@ namespace FlpExporter.WavToMp4
         private readonly string ffmpegLocation = @".\ffmpeg\bin\ffmpeg.exe";
         private readonly string vidFolder = @".\videos";
         private readonly string audioFolder = @".\audio";
+        private readonly IThumbnailManager _thumbnailManager;
 
-        public Mp4Exporter(Mp4ExportOptions options, ILogger logger)
+        public Mp4Exporter(Mp4ExportOptions options, ILogger logger, IThumbnailManager thumbnailManager)
         {
             _options = options;
             _logger = logger;
+            _thumbnailManager = thumbnailManager;   
         }
 
         public void Export(string path)
         {
-            //FFMpeg.PosterWithAudio(inputPath, inputAudioPath, outputPath);
-            //// or
-            //var image = Image.FromFile(inputImagePath);
-            //image.AddAudio(inputAudioPath, outputPath);
             throw new NotImplementedException();
         }
 
         public void ExportAll(string folder)
         {
+            ClearDirectory();
+
             string[] wavFiles = GetFiles(audioFolder, "wav");
             _logger.LogInfo($"Wav files to use in vids ({wavFiles.Length})");
             foreach (string wavFile in wavFiles)
@@ -43,12 +44,25 @@ namespace FlpExporter.WavToMp4
             _logger.LogSuccess($"Successfully rendered {mp4Files.Length} mp4 files!");
         }
 
+        private void ClearDirectory()
+        {
+            DirectoryInfo di = new DirectoryInfo(vidFolder);
+
+            string[] mp4Files = GetFiles(vidFolder, "mp4");
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+        }
+
         private void RenderAllMp4(string[] wavFiles)
         {
-            string imgFile = @".\thumbnails\img.jpg";
+            
 
             foreach (var wavFile in wavFiles)
             {
+                string imgFile = _thumbnailManager.GetThumbnailPath();
+
                 string vidFile = $@"{vidFolder}\{Path.GetFileNameWithoutExtension(wavFile)}.mp4";
                 string ffmpegCommand = $@"{Wrap(ffmpegLocation)} -loop 1 -i {Wrap(imgFile)} -i {Wrap(wavFile)} -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest -vf ""scale=1280:720"" {Wrap(vidFile)}";
                 string ffmpegArgs = $@"-loop 1 -i {Wrap(imgFile)} -i {Wrap(wavFile)} -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest -vf ""scale=1280:720"" {Wrap(vidFile)}";

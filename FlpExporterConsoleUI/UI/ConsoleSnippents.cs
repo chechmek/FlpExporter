@@ -44,6 +44,9 @@
 
 
             Console.ForegroundColor = ConsoleColor.White;
+
+            Console.WriteLine("Press to start exporting");
+            Console.ReadKey();
         }
 
 
@@ -79,5 +82,6 @@
             ");
             Console.ForegroundColor = ConsoleColor.White;
         }
+        
     }
 }

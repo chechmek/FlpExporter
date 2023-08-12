@@ -1,6 +1,7 @@
 ﻿using FlpExporter.FlpExport;
 using FlpExporter.Logging;
 using FlpExporter.Mp4ToYoutube;
+using FlpExporter.Thumbnail;
 using FlpExporter.WavToMp4;
 using FlpExporterConsoleUI.UI;
 
@@ -20,7 +21,8 @@ namespace FlpExporter.Jobs
             _logger = logger;
             _flpExporter = new FlpAudioExporter(options.FlpExportOptions, logger);
             _youtubeExporter = new YoutubeExporter(options.YoutubeExportOptions, logger);
-            _mp4Exporter = new Mp4Exporter(options.Mp4ExportOptions, logger);
+            IThumbnailManager thumbnailManager = new ThumbnailManager(logger);
+            _mp4Exporter = new Mp4Exporter(options.Mp4ExportOptions, logger, thumbnailManager);
         }
 
         public void Run()
