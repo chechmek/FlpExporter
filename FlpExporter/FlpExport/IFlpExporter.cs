@@ -1,6 +1,6 @@
 ﻿using FlpExporter.Abstract;
 
-namespace FlpExporter.FlpRender
+namespace FlpExporter.FlpExport
 {
     public interface IFlpExporter : IExporter
     {
