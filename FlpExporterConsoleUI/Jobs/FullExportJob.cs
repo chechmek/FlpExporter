@@ -2,6 +2,7 @@
 using FlpExporter.Logging;
 using FlpExporter.Mp4ToYoutube;
 using FlpExporter.WavToMp4;
+using FlpExporterConsoleUI.UI;
 
 namespace FlpExporter.Jobs
 {
@@ -24,9 +25,24 @@ namespace FlpExporter.Jobs
 
         public void Run()
         {
-            _flpExporter.ExportAll(Locations.FlpFolder);
-            _mp4Exporter.ExportAll(Locations.AudioFolder);
-            _youtubeExporter.ExportAll(Locations.VideoFolder);
+            if (_options.FlpExportStage)
+            {
+                ConsoleSnippents.ShowFlRender();
+                _flpExporter.ExportAll(Locations.FlpFolder);
+            }
+
+            if (_options.RenderVidsStage)
+            {
+                ConsoleSnippents.ShowMp4Render();
+                _mp4Exporter.ExportAll(Locations.AudioFolder);
+            }
+
+            if (_options.ExportToYoutubeStage)
+            {
+                ConsoleSnippents.ShowYoutubeExport();
+                _youtubeExporter.ExportAll(Locations.VideoFolder);
+            }
+            
         }
     }
 }

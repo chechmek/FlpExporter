@@ -3,7 +3,7 @@ using FlpExporter.FlpExport;
 using FlpExporter.Jobs;
 using FlpExporter.Mp4ToYoutube;
 using FlpExporter.WavToMp4;
-using FlpExporterConsoleUI.Logging;
+using FlpExporterConsoleUI.UI;
 
 var console = new ConsoleUI();
 
@@ -16,9 +16,18 @@ FlpExportOptions flpExportOptions = new()
 YoutubeExportOptions youtubeExportOptions = new();
 Mp4ExportOptions mp4ExportOptions = new();
 
-FullExportOptions fullExportOptions = new FullExportOptions(flpExportOptions, youtubeExportOptions, mp4ExportOptions);
+FullExportOptions fullExportOptions = new FullExportOptions(
+    flpExportOptions, 
+    youtubeExportOptions, 
+    mp4ExportOptions,
+    FlpExportStage: false,
+    RenderVidsStage: true,
+    ExportToYoutubeStage: false);
 
 FullExportJob job = new(fullExportOptions, console);
+
+ConsoleSnippents.ShowStartScreen();
+
 job.Run();
 
 Console.ReadLine();

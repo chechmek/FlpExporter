@@ -1,10 +1,12 @@
-﻿using FlpExporter.Logging;
+﻿using FlpExporter.Abstract;
+using FlpExporter.Logging;
 using System.Diagnostics;
 
 namespace FlpExporter.FlpExport
 {
-    public class FlpAudioExporter : IFlpExporter
+    public class FlpAudioExporter : BaseExporter, IFlpExporter
     {
+        private readonly FlpExportOptions _options;
         private readonly ILogger _logger;
         private string formats;
         private string fl64Location;
@@ -12,6 +14,7 @@ namespace FlpExporter.FlpExport
 
         public FlpAudioExporter(FlpExportOptions options, ILogger logger)
         {
+            _options = options;
             _logger = logger;
             formats = GetFormatsString(options.RenderMp3);
             fl64Location = options.fl64Location;
@@ -35,9 +38,8 @@ namespace FlpExporter.FlpExport
                 return;
             }
 
-
-            string[] files = GetFlpFiles(folder);
-            int fileCount = files.Length;
+            string[] flpFiles = GetFiles(folder, "flp");
+            int fileCount = flpFiles.Length;
             _logger.LogInfo($"Found {fileCount} .flp files in {folder}");
             if(fileCount == 0)
             {
@@ -45,7 +47,7 @@ namespace FlpExporter.FlpExport
                 return;
             }
 
-            foreach (string file in files)
+            foreach (string file in flpFiles)
                 _logger.LogInfo(file);
 
             if (!Directory.Exists(destinationFolder))
@@ -53,14 +55,30 @@ namespace FlpExporter.FlpExport
             else
                 _logger.LogInfo($"Audio will be saved to {destinationFolder}");
 
-            ExportFlp(folder);
+            foreach(string file in flpFiles)
+            {
+                ExportFlp(file);
+            }
 
+            ShowResults();
             _logger.LogSuccess("Flp export all job finished!");
+        }
+
+        private void ShowResults()
+        {
+            if (_options.RenderMp3)
+            {
+                string[] mp3Files = GetFiles(destinationFolder, "mp3");
+                _logger.LogInfo($"Rendered {mp3Files.Length} .mp3 files");
+            }
+            
+            string[] wavFiles = GetFiles(destinationFolder, "wav");
+            _logger.LogInfo($"Rendered {wavFiles.Length} .wav files");
         }
 
         private void ExportFlp(string flpLocation)
         {
-            string exportAudioCommand = @$"{Wrap(fl64Location)} /E{formats} /R /O{Wrap(destinationFolder)} /F{Wrap(@".\" + flpLocation)}";
+            string exportAudioCommand = @$"{Wrap(fl64Location)} /E{formats} /R /O{Wrap(destinationFolder)} {Wrap(@".\" + flpLocation)}";
 
             Process cmd = new Process();
             cmd.StartInfo.FileName = "cmd.exe";
@@ -85,16 +103,6 @@ namespace FlpExporter.FlpExport
                 return "wav";
         }
 
-        private string[] GetFlpFiles(string path)
-        {
-            //var directory = Path.Combine(Directory.GetCurrentDirectory(), path);
-            var files = Directory.GetFiles(path, "*.flp", SearchOption.TopDirectoryOnly);
-            return files;
-        }
-
-        private string Wrap(string str)
-        {
-            return @"""" + str + @"""";
-        }
+        
     }
 }

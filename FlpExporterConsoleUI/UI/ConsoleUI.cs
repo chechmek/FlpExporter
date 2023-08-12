@@ -1,12 +1,12 @@
 ﻿using FlpExporter.Logging;
 
-namespace FlpExporterConsoleUI.Logging
+namespace FlpExporterConsoleUI.UI
 {
     public class ConsoleUI : ILogger
     {
         public void Log(string message)
         {
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine(message);
             Console.ResetColor();
         }
