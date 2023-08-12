@@ -20,7 +20,7 @@ FullExportOptions fullExportOptions = new FullExportOptions(
     flpExportOptions, 
     youtubeExportOptions, 
     mp4ExportOptions,
-    FlpExportStage: false,
+    FlpExportStage: true,
     RenderVidsStage: true,
     ExportToYoutubeStage: false);
 

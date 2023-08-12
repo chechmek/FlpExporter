@@ -10,6 +10,8 @@ namespace FlpExporter.WavToMp4
         private readonly Mp4ExportOptions _options;
         private readonly ILogger _logger;
         private readonly string ffmpegLocation = @".\ffmpeg\bin\ffmpeg.exe";
+        private readonly string vidFolder = @".\videos";
+        private readonly string audioFolder = @".\audio";
 
         public Mp4Exporter(Mp4ExportOptions options, ILogger logger)
         {
@@ -28,42 +30,71 @@ namespace FlpExporter.WavToMp4
 
         public void ExportAll(string folder)
         {
-            string audioPath = @".\audio";
-            string[] wavFiles = GetFiles(audioPath, "wav");
+            string[] wavFiles = GetFiles(audioFolder, "wav");
             _logger.LogInfo($"Wav files to use in vids ({wavFiles.Length})");
             foreach (string wavFile in wavFiles)
                 _logger.LogInfo(wavFile);
 
-            string imgPath = @".\thumbnails\img.jpg";
-            string inputAudioPath = @".\audio\ggsong.wav";
-            string vidFolder = @".\videos";
+            string imgFile = @".\thumbnails\img.jpg";
+
+            RenderAllMp4(wavFiles);
+
+            string[] mp4Files = GetFiles(vidFolder, "mp4");
+            _logger.LogSuccess($"Successfully rendered {mp4Files.Length} mp4 files!");
+        }
+
+        private void RenderAllMp4(string[] wavFiles)
+        {
+            string imgFile = @".\thumbnails\img.jpg";
 
             foreach (var wavFile in wavFiles)
             {
                 string vidFile = $@"{vidFolder}\{Path.GetFileNameWithoutExtension(wavFile)}.mp4";
-                RenderMp4(imgPath, wavFile, vidFile);
+                string ffmpegCommand = $@"{Wrap(ffmpegLocation)} -loop 1 -i {Wrap(imgFile)} -i {Wrap(wavFile)} -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest -vf ""scale=1280:720"" {Wrap(vidFile)}";
+                string ffmpegArgs = $@"-loop 1 -i {Wrap(imgFile)} -i {Wrap(wavFile)} -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest -vf ""scale=1280:720"" {Wrap(vidFile)}";
+
+                _logger.LogSuccess($"Rendering {vidFile}");
+
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+
+                startInfo.CreateNoWindow = false;
+                startInfo.UseShellExecute = false;
+                startInfo.FileName = ffmpegLocation;
+                startInfo.Arguments = ffmpegArgs;
+                startInfo.RedirectStandardOutput = true;
+                //startInfo.RedirectStandardError = true;
+
+                Console.WriteLine(string.Format(
+                    "Executing \"{0}\" with arguments \"{1}\".\r\n",
+                    startInfo.FileName,
+                    startInfo.Arguments));
+
+                try
+                {
+                    using (Process process = Process.Start(startInfo))
+                    {
+                        while (!process.StandardOutput.EndOfStream)
+                        {
+                            string line = process.StandardOutput.ReadLine();
+                            Console.WriteLine(line);
+                        }
+
+                        process.WaitForExit();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                _logger.LogSuccess($"Rendered {vidFile}");
             }
 
-            
         }
 
         private void RenderMp4(string imgPath, string audioPath, string vidPath)
         {
-            string ffmpegCommand = $@"{Wrap(ffmpegLocation)} -loop 1 -i {Wrap(imgPath)} -i {Wrap(audioPath)} -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest -vf ""scale=1280:720"" {Wrap(vidPath)}";
 
-            Process ffmpegProccess = new Process();
-            ffmpegProccess.StartInfo.FileName = "cmd.exe";
-            ffmpegProccess.StartInfo.RedirectStandardInput = true;
-            ffmpegProccess.StartInfo.RedirectStandardOutput = true;
-            ffmpegProccess.StartInfo.CreateNoWindow = true;
-            ffmpegProccess.StartInfo.UseShellExecute = false;
-            ffmpegProccess.Start();
-
-            ffmpegProccess.StandardInput.WriteLine(ffmpegCommand);
-            ffmpegProccess.StandardInput.Flush();
-            ffmpegProccess.StandardInput.Close();
-            ffmpegProccess.WaitForExit();
-            _logger.Log(ffmpegProccess.StandardOutput.ReadToEnd());
         }
     }
 }
