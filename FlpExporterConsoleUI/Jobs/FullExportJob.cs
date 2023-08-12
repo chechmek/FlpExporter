@@ -21,7 +21,7 @@ namespace FlpExporter.Jobs
             _logger = logger;
             _flpExporter = new FlpAudioExporter(options.FlpExportOptions, logger);
             _youtubeExporter = new YoutubeExporter(options.YoutubeExportOptions, logger);
-            IThumbnailManager thumbnailManager = new ThumbnailManager(logger);
+            IThumbnailManager thumbnailManager = new ThumbnailManager(logger, _options.Mp4ExportOptions.thumbnailManagerOptions);
             _mp4Exporter = new Mp4Exporter(options.Mp4ExportOptions, logger, thumbnailManager);
         }
 
@@ -30,19 +30,19 @@ namespace FlpExporter.Jobs
             if (_options.FlpExportStage)
             {
                 ConsoleSnippents.ShowFlRender();
-                _flpExporter.ExportAll(Locations.FlpFolder);
+                _flpExporter.ExportAll(_options.Folders.FlpFolder);
             }
 
             if (_options.RenderVidsStage)
             {
                 ConsoleSnippents.ShowMp4Render();
-                _mp4Exporter.ExportAll(Locations.AudioFolder);
+                _mp4Exporter.ExportAll(_options.Folders.AudioFolder);
             }
 
             if (_options.ExportToYoutubeStage)
             {
                 ConsoleSnippents.ShowYoutubeExport();
-                _youtubeExporter.ExportAll(Locations.VideoFolder);
+                _youtubeExporter.ExportAll(_options.Folders.VideoFolder);
             }
             
         }

@@ -10,16 +10,19 @@ namespace FlpExporter.WavToMp4
     {
         private readonly Mp4ExportOptions _options;
         private readonly ILogger _logger;
-        private readonly string ffmpegLocation = @".\ffmpeg\bin\ffmpeg.exe";
-        private readonly string vidFolder = @".\videos";
-        private readonly string audioFolder = @".\audio";
+        private readonly string ffmpegLocation;
+        private readonly string vidFolder;
+        private readonly string audioFolder;
         private readonly IThumbnailManager _thumbnailManager;
 
         public Mp4Exporter(Mp4ExportOptions options, ILogger logger, IThumbnailManager thumbnailManager)
         {
             _options = options;
             _logger = logger;
-            _thumbnailManager = thumbnailManager;   
+            _thumbnailManager = thumbnailManager;
+            ffmpegLocation = options.FfmpegLocation;
+            vidFolder = @".\" + options.VidFolder;
+            audioFolder = @".\" + options.AudioFolder;
         }
 
         public void Export(string path)
@@ -35,8 +38,6 @@ namespace FlpExporter.WavToMp4
             _logger.LogInfo($"Wav files to use in vids ({wavFiles.Length})");
             foreach (string wavFile in wavFiles)
                 _logger.LogInfo(wavFile);
-
-            string imgFile = @".\thumbnails\img.jpg";
 
             RenderAllMp4(wavFiles);
 
@@ -103,11 +104,6 @@ namespace FlpExporter.WavToMp4
 
                 _logger.LogSuccess($"Rendered {vidFile}");
             }
-
-        }
-
-        private void RenderMp4(string imgPath, string audioPath, string vidPath)
-        {
 
         }
     }

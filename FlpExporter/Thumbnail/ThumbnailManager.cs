@@ -6,12 +6,13 @@ namespace FlpExporter.Thumbnail
     public class ThumbnailManager : BaseExporter, IThumbnailManager
     {
         private readonly ILogger _logger;
-        private string _thumbnailsFolder = Locations.ThumbnailsFolder;
+        private string _thumbnailsFolder;
         private HashSet<string> _thumbnails = new HashSet<string>();
 
-        public ThumbnailManager(ILogger logger)
+        public ThumbnailManager(ILogger logger, ThumbnailManagerOptions thumbnailManagerOptions)
         {
             _logger = logger;
+            _thumbnailsFolder = thumbnailManagerOptions.ThumbnailsFolder;
         }
         public string GetThumbnailPath()
         {
