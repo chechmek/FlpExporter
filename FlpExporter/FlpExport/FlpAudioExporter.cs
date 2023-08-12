@@ -15,7 +15,7 @@ namespace FlpExporter.FlpExport
             _logger = logger;
             formats = GetFormatsString(options.RenderMp3);
             fl64Location = options.fl64Location;
-            destinationFolder = options.outputFolder;
+            destinationFolder = Path.Combine(Directory.GetCurrentDirectory(), options.outputFolder);
         }
 
         public void Export(string path)
@@ -23,7 +23,7 @@ namespace FlpExporter.FlpExport
             if (!File.Exists(path))
                 _logger.Log($"File {path} does not exist!");
 
-            ExportFlp(path);
+            throw new NotImplementedException();
         }
 
         public void ExportAll(string folder)
@@ -34,6 +34,7 @@ namespace FlpExporter.FlpExport
                 _logger.LogError("Skipping flp export!");
                 return;
             }
+
 
             string[] files = GetFlpFiles(folder);
             int fileCount = files.Length;
@@ -47,6 +48,11 @@ namespace FlpExporter.FlpExport
             foreach (string file in files)
                 _logger.LogInfo(file);
 
+            if (!Directory.Exists(destinationFolder))
+                _logger.LogError($"Output directory {destinationFolder} not found, audio will be saved to flp location");
+            else
+                _logger.LogInfo($"Audio will be saved to {destinationFolder}");
+
             ExportFlp(folder);
 
             _logger.LogSuccess("Flp export all job finished!");
@@ -54,7 +60,7 @@ namespace FlpExporter.FlpExport
 
         private void ExportFlp(string flpLocation)
         {
-            string exportAudioCommand = @$"{Wrap(fl64Location)} /E{formats} /R /O{Wrap(destinationFolder)} {Wrap(flpLocation)}";
+            string exportAudioCommand = @$"{Wrap(fl64Location)} /E{formats} /R /O{Wrap(destinationFolder)} /F{Wrap(@".\" + flpLocation)}";
 
             Process cmd = new Process();
             cmd.StartInfo.FileName = "cmd.exe";
