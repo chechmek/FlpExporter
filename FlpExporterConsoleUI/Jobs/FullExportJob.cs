@@ -30,19 +30,19 @@ namespace FlpExporter.Jobs
             if (_options.FlpExportStage)
             {
                 ConsoleSnippents.ShowFlRender();
-                _flpExporter.ExportAll(_options.Folders.FlpFolder);
+                _flpExporter.ExportAll(_options.FlpExportOptions.FlpFolder);
             }
 
             if (_options.RenderVidsStage)
             {
                 ConsoleSnippents.ShowMp4Render();
-                _mp4Exporter.ExportAll(_options.Folders.AudioFolder);
+                _mp4Exporter.ExportAll(_options.Mp4ExportOptions.AudioFolder);
             }
 
             if (_options.ExportToYoutubeStage)
             {
                 ConsoleSnippents.ShowYoutubeExport();
-                _youtubeExporter.ExportAll(_options.Folders.VideoFolder);
+                _youtubeExporter.ExportAll(_options.YoutubeExportOptions.VidFolder);
             }
             
         }

@@ -1,14 +1,13 @@
 ﻿using FlpExporter.FlpExport;
 using FlpExporter.Mp4ToYoutube;
 using FlpExporter.WavToMp4;
-using FlpExporterConsoleUI.Jobs;
 using System.Text.Json;
 
 namespace FlpExporter.Jobs
 {
     public class FullExportOptions
     {
-        public FullExportOptions(FlpExportOptions flpExportOptions, YoutubeExportOptions youtubeExportOptions, Mp4ExportOptions mp4ExportOptions, bool flpExportStage, bool exportToYoutubeStage, bool renderVidsStage, Folders folders)
+        public FullExportOptions(FlpExportOptions flpExportOptions, YoutubeExportOptions youtubeExportOptions, Mp4ExportOptions mp4ExportOptions, bool flpExportStage, bool exportToYoutubeStage, bool renderVidsStage)
         {
             FlpExportOptions = flpExportOptions;
             YoutubeExportOptions = youtubeExportOptions;
@@ -16,7 +15,6 @@ namespace FlpExporter.Jobs
             FlpExportStage = flpExportStage;
             ExportToYoutubeStage = exportToYoutubeStage;
             RenderVidsStage = renderVidsStage;
-            Folders = folders;
         }
 
         public FlpExportOptions FlpExportOptions { get; }
@@ -25,7 +23,6 @@ namespace FlpExporter.Jobs
         public bool FlpExportStage { get; }
         public bool ExportToYoutubeStage { get; }
         public bool RenderVidsStage { get; }
-        public Folders Folders { get; }
 
         public override string? ToString()
         {
