@@ -1,4 +1,6 @@
-﻿namespace FlpExporter.Thumbnail
+﻿using System.Text.Json.Serialization;
+
+namespace FlpExporter.Thumbnail
 {
     public class ThumbnailManagerOptions
     {
@@ -7,6 +9,7 @@
             ThumbnailsFolder = thumbnailsFolder;
         }
 
-        public string ThumbnailsFolder { get; }
+        [JsonRequired]
+        public string ThumbnailsFolder { get; set; }
     }
 }

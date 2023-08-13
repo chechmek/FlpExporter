@@ -2,6 +2,7 @@
 using FlpExporter.Mp4ToYoutube;
 using FlpExporter.WavToMp4;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace FlpExporter.Jobs
 {
@@ -16,13 +17,18 @@ namespace FlpExporter.Jobs
             ExportToYoutubeStage = exportToYoutubeStage;
             RenderVidsStage = renderVidsStage;
         }
-
-        public FlpExportOptions FlpExportOptions { get; }
-        public YoutubeExportOptions YoutubeExportOptions { get; }
-        public Mp4ExportOptions Mp4ExportOptions { get; }
-        public bool FlpExportStage { get; }
-        public bool ExportToYoutubeStage { get; }
-        public bool RenderVidsStage { get; }
+        [JsonRequired]
+        public FlpExportOptions FlpExportOptions { get; set; }
+        [JsonRequired]
+        public YoutubeExportOptions YoutubeExportOptions { get; set; }
+        [JsonRequired]
+        public Mp4ExportOptions Mp4ExportOptions { get; set; }
+        [JsonRequired]
+        public bool FlpExportStage { get; set; }
+        [JsonRequired]
+        public bool ExportToYoutubeStage { get; set; }
+        [JsonRequired]
+        public bool RenderVidsStage { get; set; }
 
         public override string? ToString()
         {

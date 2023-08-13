@@ -61,14 +61,25 @@ var options = new JsonSerializerOptions
     WriteIndented = true // For pretty-printing the JSON output
 };
 
-FullExportOptions fullExportOptions = JsonSerializer.Deserialize<FullExportOptions>(jsonData, options);
+try
+{
+    FullExportOptions fullExportOptions = JsonSerializer.Deserialize<FullExportOptions>(jsonData, options);
 
-FullExportJob job = new(fullExportOptions, console);
+    FullExportJob job = new(fullExportOptions, console);
 
-ConsoleSnippents.ShowStartScreen();
-Console.WriteLine(fullExportOptions.ToString());
+    ConsoleSnippents.ShowStartScreen();
+    Console.WriteLine(fullExportOptions.ToString());
 
-job.Run();
+    job.Run();
+
+    console.LogSuccess("Експорт завершений, гарного дня!");
+}
+catch(Exception ex)
+{
+    console.LogError(ex.Message);
+    throw;
+}
+
 
 Console.ReadLine();
 

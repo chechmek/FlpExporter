@@ -1,4 +1,5 @@
 ﻿using FlpExporter.Thumbnail;
+using System.Text.Json.Serialization;
 
 namespace FlpExporter.WavToMp4
 {
@@ -12,9 +13,13 @@ namespace FlpExporter.WavToMp4
             AudioFolder = audioFolder;
         }
 
-        public ThumbnailManagerOptions thumbnailManagerOptions { get; }
+        [JsonRequired]
+        public ThumbnailManagerOptions thumbnailManagerOptions { get; set; }
+        [JsonRequired]
         public string FfmpegLocation { get; set; }
+        [JsonRequired]
         public string VidFolder { get; set; }
+        [JsonRequired]
         public string AudioFolder { get; set; }
     }
 }

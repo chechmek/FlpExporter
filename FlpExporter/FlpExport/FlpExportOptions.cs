@@ -1,4 +1,6 @@
-﻿namespace FlpExporter.FlpExport
+﻿using System.Text.Json.Serialization;
+
+namespace FlpExporter.FlpExport
 {
     public class FlpExportOptions
     {
@@ -10,9 +12,13 @@
             FlpFolder = flpFolder;
         }
 
+        [JsonRequired]
         public bool RenderMp3 { get; set; }
+        [JsonRequired]
         public string outputFolder { get; set; }
+        [JsonRequired]
         public string fl64Location { get; set; }
-        public string FlpFolder { get; }
+        [JsonRequired]
+        public string FlpFolder { get; set; }
     }
 }
